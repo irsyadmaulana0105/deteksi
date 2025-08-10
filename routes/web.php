@@ -9,3 +9,7 @@ Route::get('/', function () {
 Route::get('/landing', function () {
     return view('landing');
 });
+
+use App\Http\Controllers\PredictionApiController;
+
+Route::post('/upload-gambar', [PredictionApiController::class, 'store']);

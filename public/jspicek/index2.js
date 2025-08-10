@@ -7,10 +7,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Definisikan path ke file JSON
-const dataFilePath = path.join(__dirname, 'gambar', 'bendera-removebg-preview.png');
+// Definisikan path ke file JSON dan gambar
+const dataFilePath = path.join(__dirname, 'data.json');
 
-console.log("Predictions:", dataFilePath);
 // Buat instance TeachableMachine
 const model = new TeachableMachine({
     modelUrl: "https://teachablemachine.withgoogle.com/models/Lqr-431p4/"
@@ -18,42 +17,20 @@ const model = new TeachableMachine({
 
 async function processPrediction() {
     try {
-        // Baca data.json untuk mendapatkan jalur gambar
+        // Baca ulang data.json untuk update
         const currentData = await fs.readFile(dataFilePath, 'utf8');
         const updatedJson = JSON.parse(currentData);
-
-        // --- Bagian ini yang diubah ---
-        // Ambil jalur gambar dari properti 'path' di data.json
-        const imagePathFromJSON = updatedJson.path;
-        // -----------------------------
-
-        if (!imagePathFromJSON) {
-            console.error("Properti 'path' tidak ditemukan di data.json.");
-            return;
-        }
-
-        // Tentukan path absolut untuk gambar
-        const imagePath = path.join(__dirname, imagePathFromJSON);
-
-        // Baca file gambar lokal sebagai buffer
+        const fileName = updatedJson.name;
+        const extension = path.extname(fileName).slice(1);
+        const imagePath = path.join(__dirname, 'gambar', fileName);
+        console.log("url:", extension);
         const imageBuffer = await fs.readFile(imagePath);
-
-        // Dapatkan ekstensi file untuk menentukan tipe data
-        const fileExtension = path.extname(imagePath).toLowerCase();
-        let mimeType = 'application/octet-stream';
-        if (fileExtension === '.png') {
-            mimeType = 'image/png';
-        } else if (fileExtension === '.jpg' || fileExtension === '.jpeg') {
-            mimeType = 'image/jpeg';
-        }
 
         // Konversi buffer gambar menjadi Base64 string
         const imageBase64 = imageBuffer.toString('base64');
-        const imageDataUrl = `data:${mimeType};base64,${imageBase64}`;
+        const imageDataUrl = `data:image/${extension};base64,${imageBase64}`;
+        console.log(imagePath);
 
-        console.log(`Membaca gambar dari: ${imagePath}`);
-
-        // Klasifikasi gambar menggunakan Base64 string
         const predictions = await model.classify({
             imageUrl: imageDataUrl,
         });
@@ -66,9 +43,23 @@ async function processPrediction() {
             return;
         }
 
+
         // Ambil tanggal dan waktu saat ini
-        const currentDate = new Date();
-        const dateTimeString = currentDate.toISOString().replace('T', ' ').substring(0, 19);
+        const now = new Date();
+        const options = {
+            timeZone: 'Asia/Jakarta',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // Menggunakan format 24 jam
+        };
+
+        // Buat string tanggal dalam format YYYY-MM-DD
+        const dateTimeString = now.toLocaleDateString('en-CA', options);
+
 
         // Update objek JSON dengan data prediksi
         updatedJson.nama = predictions[0].class;

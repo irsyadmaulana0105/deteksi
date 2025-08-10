@@ -277,6 +277,7 @@
     </section>
 
     <!-- Upload Your Plant Image Section -->
+    <!-- Upload Your Plant Image Section -->
 <section class="py-5 mb-5" id="unggah">
     <div class="container text-center">
         <h2 class="fw-bold mb-3">Unggah Gambar Tanaman Anda</h2>
@@ -300,12 +301,13 @@
 
                     <div class="d-flex justify-content-center gap-3">
                         <button class="btn btn-success px-4" onclick="document.getElementById('fileInput').click()">Jelajahi File</button>
-                        <button id="startPredictBtn" class="btn btn-primary" style="display:none;">
-                            Mulai Prediksi
-                        </button>
                         <input type="file" id="fileInput" class="d-none" accept=".jpg,.jpeg,.png">
                     </div>
 
+                    <!-- Tombol Mulai Prediksi (Awalnya disembunyikan) -->
+                    <button id="startPredictBtn" class="btn btn-primary mt-3" style="display:none;">
+                        Mulai Prediksi
+                    </button>
 
                     <p class="text-muted mt-3"><small>Mendukung: JPG, PNG, WebP (Max 10MB)</small></p>
                 </div>
@@ -314,20 +316,16 @@
             <div class="col-lg-6">
                 <div class="d-flex flex-column gap-3">
                     <div class="text-start">
-                        <label for="textAreaResult1" class="form-label fw-bold">Nama Penyakit</label>
-                        <textarea class="form-control" id="textAreaResult1" rows="1" readonly></textarea>
+                        <label for="textAreaResult1" class="form-label fw-bold">Hasil Prediksi</label>
+                        <textarea class="form-control" id="textAreaResult1" rows="3" readonly></textarea>
                     </div>
                     <div class="text-start">
-                        <label for="textAreaResult2" class="form-label fw-bold">Isi</label>
-                        <textarea class="form-control" id="textAreaResult2" rows="5" readonly></textarea>
+                        <label for="textAreaResult2" class="form-label fw-bold">Skor Keyakinan</label>
+                        <textarea class="form-control" id="textAreaResult2" rows="3" readonly></textarea>
                     </div>
                     <div class="text-start">
-                        <label for="textAreaResult3" class="form-label fw-bold">penanganan</label>
-                        <textarea class="form-control" id="textAreaResult3" rows="5" readonly></textarea>
-                    </div>
-                    <div class="text-start">
-                        <label for="textAreaResult4" class="form-label fw-bold">pencegahan</label>
-                        <textarea class="form-control" id="textAreaResult4" rows="5" readonly></textarea>
+                        <label for="textAreaResult3" class="form-label fw-bold">Tanggal dan Waktu</label>
+                        <textarea class="form-control" id="textAreaResult3" rows="3" readonly></textarea>
                     </div>
                 </div>
             </div>
@@ -335,14 +333,12 @@
     </div>
 </section>
 
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const fileInput = document.getElementById('fileInput');
     const previewImage = document.getElementById('previewImage');
     const startPredictBtn = document.getElementById('startPredictBtn');
 
-    // Saat pilih file
     fileInput.addEventListener('change', function () {
         const file = this.files[0];
         if (file) {
@@ -356,30 +352,15 @@
         }
     });
 
-    // Saat klik Mulai Predik
     startPredictBtn.addEventListener('click', function () {
         const file = fileInput.files[0];
         if (!file) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Silakan pilih gambar terlebih dahulu.'
-            });
+            alert('Silakan pilih gambar terlebih dahulu.');
             return;
         }
 
         const formData = new FormData();
         formData.append('gambar', file);
-
-        // Tampilkan loading SweetAlert
-        Swal.fire({
-            title: 'Sedang memproses...',
-            text: 'Mohon tunggu, AI sedang menganalisis gambar Anda',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
 
         fetch('/upload-gambar', {
             method: 'POST',
@@ -390,36 +371,11 @@
         })
         .then(res => res.json())
         .then(data => {
-            Swal.close(); // Tutup loading
-
-            if (data.nama === "non") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Pastikan nambar adalah Padi',
-                    text: 'Terjadi kesalahan saat memproses gambar.'
-                });
-            } else {
-            console.log(data)
-
-                document.getElementById('textAreaResult1').value = data.nama;
-                document.getElementById('textAreaResult2').value = data.data.isi;
-                document.getElementById('textAreaResult3').value = data.data.penanganan;
-                document.getElementById('textAreaResult4').value = data.data.pencegahan;
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Upload & Prediksi Berhasil',
-                    text: `Gambar berhasil diunggah:`
-                });
-            }
+            console.log(data);
         })
         .catch(err => {
-            Swal.close();
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal Mengunggah',
-                text: 'Terjadi kesalahan koneksi atau server.'
-            });
             console.error(err);
+            alert('Gagal mengunggah gambar.');
         });
     });
 </script>

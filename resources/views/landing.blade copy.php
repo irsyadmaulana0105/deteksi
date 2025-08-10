@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deteksi Penyakit Daun Padi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -277,7 +276,7 @@
     </section>
 
     <!-- Upload Your Plant Image Section -->
-<section class="py-5 mb-5" id="unggah">
+    <section class="py-5 mb-5" id="unggah">
     <div class="container text-center">
         <h2 class="fw-bold mb-3">Unggah Gambar Tanaman Anda</h2>
         <p class="text-muted mb-5">Dapatkan deteksi penyakit bertenaga AI instan dan rekomendasi perawatan</p>
@@ -300,12 +299,8 @@
 
                     <div class="d-flex justify-content-center gap-3">
                         <button class="btn btn-success px-4" onclick="document.getElementById('fileInput').click()">Jelajahi File</button>
-                        <button id="startPredictBtn" class="btn btn-primary" style="display:none;">
-                            Mulai Prediksi
-                        </button>
                         <input type="file" id="fileInput" class="d-none" accept=".jpg,.jpeg,.png">
                     </div>
-
 
                     <p class="text-muted mt-3"><small>Mendukung: JPG, PNG, WebP (Max 10MB)</small></p>
                 </div>
@@ -314,20 +309,16 @@
             <div class="col-lg-6">
                 <div class="d-flex flex-column gap-3">
                     <div class="text-start">
-                        <label for="textAreaResult1" class="form-label fw-bold">Nama Penyakit</label>
-                        <textarea class="form-control" id="textAreaResult1" rows="1" readonly></textarea>
+                        <label for="textAreaResult1" class="form-label fw-bold">Hasil Prediksi</label>
+                        <textarea class="form-control" id="textAreaResult1" rows="3" readonly></textarea>
                     </div>
                     <div class="text-start">
-                        <label for="textAreaResult2" class="form-label fw-bold">Isi</label>
-                        <textarea class="form-control" id="textAreaResult2" rows="5" readonly></textarea>
+                        <label for="textAreaResult2" class="form-label fw-bold">Skor Keyakinan</label>
+                        <textarea class="form-control" id="textAreaResult2" rows="3" readonly></textarea>
                     </div>
                     <div class="text-start">
-                        <label for="textAreaResult3" class="form-label fw-bold">penanganan</label>
-                        <textarea class="form-control" id="textAreaResult3" rows="5" readonly></textarea>
-                    </div>
-                    <div class="text-start">
-                        <label for="textAreaResult4" class="form-label fw-bold">pencegahan</label>
-                        <textarea class="form-control" id="textAreaResult4" rows="5" readonly></textarea>
+                        <label for="textAreaResult3" class="form-label fw-bold">Tanggal dan Waktu</label>
+                        <textarea class="form-control" id="textAreaResult3" rows="3" readonly></textarea>
                     </div>
                 </div>
             </div>
@@ -335,95 +326,78 @@
     </div>
 </section>
 
+<section class="py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-3">Misi Kami</h2>
+                <p class="lead">Mendukung petani dengan teknologi cerdas, terjangkau, dan mudah diakses untuk deteksi dini penyakit tanaman padi.</p>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <p class="text-muted">
+                    Misi kami di KKN UNEJ adalah memberdayakan petani padi dengan teknologi cerdas yang memungkinkan deteksi dini penyakit. Dengan menggabungkan pengetahuan mendalam tentang pertanian dan teknologi mobile, kami bertujuan meningkatkan produktivitas pertanian, mengurangi gagal panen, dan mendukung pertanian berkelanjutan melalui inovasi pemantauan kesehatan tanaman berbasis AI.
+                </p>
+                <p class="text-muted">
+                    Kami berupaya menjembatani kesenjangan antara teknologi modern dan metode pertanian tradisional dengan menyediakan alat deteksi penyakit canggih yang dapat diakses oleh semua kalangan. Solusi kami berfokus pada kemudahan penggunaan, akurasi, dan dampak nyata untuk membantu petani dalam mengambil keputusan yang tepat waktu dan terinformasi.
+                </p>
+
+                <div class="row mt-4">
+                    <div class="col-md-4 text-center">
+                        <h4 class="fw-bold text-success">95%</h4>
+                        <p class="text-muted">Tingkat Akurasi</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4 class="fw-bold text-success">24/7</h4>
+                        <p class="text-muted">Tersedia</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4 class="fw-bold text-success">Lokal</h4>
+                        <p class="text-muted">Akses</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="p-3 bg-light d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-success me-2"></span>
+                            <span class="text-success fw-bold">Pemantauan AI</span>
+                        </div>
+                        <span class="text-muted small">Analisis Real-time</span>
+                    </div>
+                    <img src="image/pari.jpg" class="img-fluid w-100" alt="Gambar Tanaman Padi">
+                    <div class="card-body bg-light">
+                        <h6 class="fw-bold mb-1">Deteksi Dini</h6>
+                        <p class="small text-muted mb-0">Pencegahan Penyakit Padi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script>
-    const fileInput = document.getElementById('fileInput');
-    const previewImage = document.getElementById('previewImage');
-    const startPredictBtn = document.getElementById('startPredictBtn');
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const previewImage = document.getElementById('previewImage');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
 
-    // Saat pilih file
-    fileInput.addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
-                startPredictBtn.style.display = 'inline-block'; // Tampilkan tombol prediksi
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block'; // Tampilkan gambar
+                    uploadPlaceholder.style.display = 'none'; // Sembunyikan placeholder
+                };
+
+                reader.readAsDataURL(file); // Baca file sebagai URL data
             }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Saat klik Mulai Predik
-    startPredictBtn.addEventListener('click', function () {
-        const file = fileInput.files[0];
-        if (!file) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Silakan pilih gambar terlebih dahulu.'
-            });
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('gambar', file);
-
-        // Tampilkan loading SweetAlert
-        Swal.fire({
-            title: 'Sedang memproses...',
-            text: 'Mohon tunggu, AI sedang menganalisis gambar Anda',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        fetch('/upload-gambar', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            Swal.close(); // Tutup loading
-
-            if (data.nama === "non") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Pastikan nambar adalah Padi',
-                    text: 'Terjadi kesalahan saat memproses gambar.'
-                });
-            } else {
-            console.log(data)
-
-                document.getElementById('textAreaResult1').value = data.nama;
-                document.getElementById('textAreaResult2').value = data.data.isi;
-                document.getElementById('textAreaResult3').value = data.data.penanganan;
-                document.getElementById('textAreaResult4').value = data.data.pencegahan;
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Upload & Prediksi Berhasil',
-                    text: `Gambar berhasil diunggah:`
-                });
-            }
-        })
-        .catch(err => {
-            Swal.close();
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal Mengunggah',
-                text: 'Terjadi kesalahan koneksi atau server.'
-            });
-            console.error(err);
         });
     });
 </script>
-
 
 </body>
 </html>
